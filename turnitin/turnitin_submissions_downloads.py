@@ -32,7 +32,6 @@
 domainBeta = "[name].beta.instructure.com"
 domainProduction = "[name].instructure.com"
 domainTest= "[name].test.instructure.com"
-domain=""
 
 csvFileName = "Canvas-turnitin_submissions"
 #add your folder path here for where you'd like the files saved: in addition, add a folder titled 'submissions'.

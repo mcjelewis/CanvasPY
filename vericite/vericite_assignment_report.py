@@ -15,7 +15,6 @@
 domainBeta = "[name].beta.instructure.com"
 domainProduction = "[name].instructure.com"
 domainTest= "[name].test.instructure.com"
-domain=""
 
 csvFileName = "Canvas-assignments"
 ##################################################

@@ -18,7 +18,7 @@
 domainBeta = "[name].beta.instructure.com"
 domainProduction = "[name].instructure.com"
 domainTest= "[name].test.instructure.com"
-domain=""
+
 ##################################################
 ########## DO NOT EDIT BELOW THIS LINE ###########
 ##################################################
