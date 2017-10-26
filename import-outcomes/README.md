@@ -17,8 +17,9 @@ This is a heavily modified version of kajiagga's [outcome importer](https://gith
 *Required Header *   
 You will need to format a csv file with the required headers.
 Required Header Field Names:'account_id','parent_directory','title','description','calculation_method','calculation_int','mastery_points'
- 'account_id': Enter the account id for where the outcome will reside if in a department or college.  Leave empty if adding outcomes to a course. Course ID can be entered when executing the script.
- 'parent_directory': Directory structure of where the outcome will reside within the account. Canvas allows for the creation of folders (Canvas calls them groups).
+
+    'account_id': Enter the account id for where the outcome will reside if in a department or college.  Leave empty if adding outcomes to a course. Course ID can be entered when executing the script.
+    'parent_directory': Directory structure of where the outcome will reside within the account. Canvas allows for the creation of folders (Canvas calls them groups).
    Limitation: While Canvas will allow for the same name to be used for multiple folders, this script does not. When creating the folder structure use a different title for each folder (group).
  'title': Title of the outcome
  'description': Description of the outcome
