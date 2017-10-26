@@ -7,6 +7,7 @@ from .api_core import *
 import requests
 import simplejson as json
 import sys,os
+from timeit import default_timer as timer
 ###########################################################################   
 ############################ Assignments ####################################
 ########################################################################### 
@@ -178,7 +179,7 @@ def get_turnitin_assignments(domain, token, courseList):
                     #   os.makedirs(folderPath)
    
                   #download_submissions(s['course_id'],s['id'], folderPath2)
-                  download_submissions(s['course_id'],s['id'], "")
+                  download_submissions(domain, token, s['course_id'],s['id'], "")
 
                 
       if 'next' in response.links:
@@ -188,9 +189,10 @@ def get_turnitin_assignments(domain, token, courseList):
       
   return assignmentList 
 ###########################################################################
-def get_vericite_assignments(domain, token, courseList):
-  global callCount
-  global start
+def get_vericite_assignments(domain, token, courseList, folderPath):
+  print('Getting the list of all Vericite assignments; this may take some time... ')
+  #global callCount
+  #global start
   assignmentList=[]
   for i in courseList:
     all_done = False
@@ -204,13 +206,13 @@ def get_vericite_assignments(domain, token, courseList):
     
     all_done = False
     while not all_done:
-      end = timer()
-      seconds = end - start
-      m, s = divmod(seconds, 60)
-      h, m = divmod(m, 60)
-      runtime = 'runtime: %d h :%d m :%d s' % (h, m, s)
-      callCount += 1
-      print(callCount, " Runtime: ", runtime, " url: ", url)
+      #end = timer()
+      #seconds = end - start
+      #m, s = divmod(seconds, 60)
+      #h, m = divmod(m, 60)
+      #runtime = 'runtime: %d h :%d m :%d s' % (h, m, s)
+      #callCount += 1
+      #print(callCount, " Runtime: ", runtime, " url: ", url)
       response = requests.get(url,headers=get_headers(token))
       #print(response)
       if not response.json():
@@ -243,12 +245,15 @@ def get_vericite_assignments(domain, token, courseList):
                 assignmentList.append(assignment)
                 if t['has_submitted_submissions']:
                   #if t['turnitin_settings__submit_papers_to']:
-                  folderPath2 = folderPath1 +  str(i['term__sis_term_id']) + str(i['account_id']) + str(t['course_id'])
+                  #folderPath2 = folderPath1 +  str(i['term__sis_term_id']) + str(i['account_id']) + str(t['course_id'])
                     #if not os.path.isdir(folderPath):
                     #   os.makedirs(folderPath)
    
                   #download_submissions(s['course_id'],s['id'], folderPath2)
-                  download_submissions(s['course_id'],s['id'], "")
+                  
+                  print(folderPath)
+                  if folderPath is not None:
+                    download_submissions(domain, token, s['course_id'],s['id'], folderPath)
 
                 
       if 'next' in response.links:
@@ -260,15 +265,15 @@ def get_vericite_assignments(domain, token, courseList):
 
 ###########################################################################
 def download_submissions(domain, token, courseID,assignmentID, folderPath):
-  global callCount
-  global fileCount
-  global fileCountAll
-  global submissionsFolder
+  callCount=0
+  fileCount=0
+  fileCountAll=0
+
   fileCountCourse=0
   assessmentList=[]
   all_done = False
-  if not os.path.exists(submissionsFolder):
-    os.makedirs(submissionsFolder)
+  if not os.path.exists(folderPath):
+    os.makedirs(folderPath)
   url = 'https://%s/api/v1/courses/%s/assignments/%s/submissions?per_page=100' % (domain,courseID,assignmentID)
   print(url)
   while not all_done:
@@ -299,7 +304,7 @@ def download_submissions(domain, token, courseID,assignmentID, folderPath):
             #print(fileExtension)
             #filePath = folderPath + "/" + fileName
             fileNameAttachment = str(attachmentID) + "_" + fileName
-            filePath = '%s/%s' % (submissionsFolder, fileNameAttachment)
+            filePath = '%s/%s' % (folderPath, fileNameAttachment)
             extAvailable = ["doc", "docx", "pdf", "rtf", "txt", "ps", "wp", "odt", "ods", "odp"]
             #print(filePath)
             

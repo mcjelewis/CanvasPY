@@ -14,9 +14,11 @@
 ##################################################
 ################## DIRECTIONS ####################
 ##################################################
-# DIRECTIONS: Edit the below variables to match your institution domain
-domain = "canvas.[name].edu"
-
+# DIRECTIONS: Edit the below variables to match your institution domain.
+domainBeta = "[name].beta.instructure.com"
+domainProduction = "[name].instructure.com"
+domainTest= "[name].test.instructure.com"
+domain=""
 ##################################################
 ########## DO NOT EDIT BELOW THIS LINE ###########
 ##################################################
@@ -43,6 +45,31 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--use_file_name',required=False,help='save data to csv file with this name')
 args = parser.parse_args()
 use_file_name = args.use_file_name
+
+#########################################################################
+######################## Determine Domain ###############################
+#########################################################################  
+server = input('Which Canvas install should be used? (B=beta, P=Production, or T-test)')
+if server.upper() == 'B':
+  domain = domainBeta
+elif server.upper() == 'P':
+  domain = domainProduction
+elif server.upper() == 'T':
+  domain = domainTest
+else:
+  print('#########################################################################')
+  print('No matching Canvas install was found.')
+  print('Exiting script.')
+  print('#########################################################################')
+  exit()
+  
+if not domain:
+    print('#########################################################################')
+    print('The Canvas Domain name is a required field.')
+    print('Exiting script.')
+    print('#########################################################################')
+    exit()
+
 ###########################################################################   
 #################### Set Authentication Token #############################
 ###########################################################################  
@@ -66,6 +93,7 @@ if not token or confirmToken == False:
     print('Exiting script.')
     print('#########################################################################')
     exit()
+
 
 #########################################################################
 ####################### Collect Account ID ##############################
@@ -323,7 +351,10 @@ print('Total % courses published enrolled >=5: ', total_course_published_enrolle
 #########################################################################
 #Save data and summary data to two different csv files
 #########################################################################
-filePath = 'usage_report/data_files/%s_%s_%s_%s.csv' % (termID,accountID,report_date,start)
+directory = "usage_report/data_files"
+if not os.path.exists(directory):
+  os.makedirs(directory)
+filePath = '%s/%s_%s_%s_%s.csv' % (directory,termID,accountID,report_date,start)
 canvasData.to_csv(filePath, sep=',')
 
 columnNames = ['reportID', 'accountID', 'termID', 'term_name', 'sis_term_id', 'term_start_date', 'course_count', 'course_published_count', 'course_enrolled_count1', 'course_published_enrolled_count1', 'course_enrolled_count2', 'course_published_enrolled_count2', 'course_enrolled_count3', 'course_published_enrolled_count3', 'course_enrolled_count4', 'course_published_enrolled_count4', 'course_enrolled_count5', 'course_published_enrolled_count5', 'unused_published_count','unused_published_enrolled_count1', 'unused_published_enrolled_count2',  'unused_published_enrolled_count3',  'unused_published_enrolled_count4',  'unused_published_enrolled_count5', 'xlist_published_sum', 'xlist_published_enrolled_sum1', 'xlist_published_enrolled_sum2', 'xlist_published_enrolled_sum3', 'xlist_published_enrolled_sum4', 'xlist_published_enrolled_sum5', 'total_course_published_count', 'total_course_published_percentage', 'total_course_published_enrolled_count1', 'total_course_published_enrolled_percentage1', 'total_course_published_enrolled_count2', 'total_course_published_enrolled_percentage2', 'total_course_published_enrolled_count3', 'total_course_published_enrolled_percentage3', 'total_course_published_enrolled_count4', 'total_course_published_enrolled_percentage4', 'total_course_published_enrolled_count5', 'total_course_published_enrolled_percentage5', 'report_path', 'report_date', 'latest_report']

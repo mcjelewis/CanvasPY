@@ -39,7 +39,7 @@ def getOutcomes(domain, token, apiType):
   outcomeList = []
   all_done = False
   url = 'https://%s/api/v1/%s/outcome_group_links?per_page=100' % (domain,apiType)
-  print(url)
+  #print(url)
   while not all_done:
     response = requests.get(url,headers=get_headers(token))
     #print(response.json())
@@ -63,7 +63,7 @@ def findOutcomeID(outcome_title, outcomeList):
     outcomeFound = {'outcomeID': 0, 'outcomeGroupID': 0, 'url': ''}
     if outcomeList:
       for outcome in outcomeList:
-        print(outcome_title, " : ", outcome['outcome']['title'])
+        #print(outcome_title, " : ", outcome['outcome']['title'])
         if outcome_title == outcome['outcome']['title']:
           outcomeFound = {'outcomeID': outcome['outcome']['id'], 'outcomeGroupID': outcome['outcome_group']['id'], 'url': outcome['outcome']['url']}
     return outcomeFound
@@ -133,11 +133,11 @@ def get_outcome(domain, token, outcomeID):
   outcomeList = []
   all_done = False
   url = 'https://%s/api/v1/outcomes/%s' % (domain, outcomeID)
-  print(url)
+  #print(url)
   while not all_done:
     response = requests.get(url,headers=get_headers(token))
     s = response.json()
-    print(s['id'])
+    #print(s['id'])
     if not response.json():
       all_done = True
     else:

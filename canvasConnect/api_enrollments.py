@@ -7,70 +7,56 @@ from .api_core import *
 import requests
 import simplejson as json
 ###########################################################################   
-############################ Messaging/Communication ####################################
+########################### Enrollments ###################################
 ########################################################################### 
-def message_list(domain, token, url, user_id, filterMsg, messageList, all_done):
-  message_count=0
-  if not url:
-      url = "https://%s/api/v1/comm_messages?user_id=%s%s&per_page=100" % (domain, user_id, filterMsg)
-  print('message list api url:', url)
-  while not all_done:
-    response = requests.get(url,headers=get_headers(token))
-    if response.status_code == 200:
-      if not response.json():
-        url = ''
-        all_done = True
-      else:
-        for s in response.json():
-          message = flattenjson(s, "__")
-          #print('id:', s['id'])
-          message_count += 1
-          messageList.append(message)
-          
-        if 'next' in response.links:
-          url = response.links['next']['url']
-          messageList = message_list(url, user_id, filterMsg,  messageList, False)
-        else:
-          url = ''
+def get_enrollments(domain, token, courseList, courseID, roleType):
+  global callCount
+  addRoles=""
+  for role in roleType:
+    addRoles += "&type[]=%s" % (role.strip())
+  enrollmentsList = []
+  all_done = False
+  if courseID:
+      url = "https://%s/api/v1/courses/%s/enrollments?per_page=100%s" % (domain, courseID, addRoles)
+      while not all_done:
+        #callCount += 1
+        #print(callCount, " url: ", url)
+        print(url)
+        response = requests.get(url,headers=get_headers(token))
+        if not response.json():
           all_done = True
-    else:
-      print('Returned error code: ', response.status_code)
-      print('#########################################################################')
-      exit()
-  return messageList
-
-
-###########################################################################
-def conversation_list(domain, token, url, user_id, filterTxt, conversationList, all_done):
-  conversation_count=0
-  if not url:
-      url = "https://%s/api/v1/conversations?as_user_id=%s%s&per_page=100" % (domain, user_id, filterTxt)
-  print('conversation api url:', url)
-  while not all_done:
-    response = requests.get(url,headers=get_headers(token))
-    if response.status_code == 200:
-      if not response.json():
-        url = ''
-        all_done = True
-      else:
-        for s in response.json():
-          aud_context = s['audience_contexts']
-          del s['audience_contexts']
-          conversation = flattenjson(s, "__")
-          conversation.update({'audience_contexts' : aud_context})
-          #print('id:', s['id'])
-          conversation_count += 1
-          conversationList.append(conversation)
-          
-        if 'next' in response.links:
-          url = response.links['next']['url']
-          conversationList = conversation_list(domain, token, url, user_id, filterTxt, conversationList, False)
         else:
-          url = ''
+          for s in response.json():
+            enrollments = flattenjson(s, "__")
+            enrollmentsList.append(enrollments)
+            #print(s)
+            #enrollmentsList.append(s)
+        if 'next' in response.links:
+            url = response.links['next']['url']
+            print(url)
+        else:
+            all_done = True
+  else:
+    for i in courseList:
+      courseID=i['id']
+      url = "https://%s/api/v1/courses/%s/enrollments?per_page=100&type[]=%s" % (domain, courseID, roleType)
+      while not all_done:
+        #callCount += 1
+        #print(callCount, " url: ", url)
+        response = requests.get(url,headers=get_headers(token))
+        if not response.json():
           all_done = True
-    else:
-      print('Returned error code: ', response.status_code)
-      print('#########################################################################')
-  return conversationList 
+        else:
+          for s in response.json():
+            enrollments = flattenjson(s, "__")
+            enrollmentsList.append(enrollments)
+            #print(s)
+            #enrollmentsList.append(s)
+        if 'next' in response.links:
+            url = response.links['next']['url']
+        else:
+            all_done = True
+      
+  return enrollmentsList 
 
 ###########################################################################

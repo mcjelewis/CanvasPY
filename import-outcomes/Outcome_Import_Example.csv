@@ -1,0 +1,7 @@
+account_id,parent_directory,title,description,calculation_method,calculation_int,mastery_points,Chooses not to perform,Below Expectations,Meets Expectations,Above Expectations,Exceeds Expectations
+103352,FolderName1,Promotion,Initiate and assume responsibility for health promotion and disease prevention activities for diverse populations,decaying_average,65,3,0,2,3,4,5
+103352,FolderName2,Synthiesize Data,"Acquire and synthesize information in a critical, scientific and effective manner",highest,,3,0,2,3,4,5
+103352,FolderName1;SubFolderName1,Healthy Lifestyle,Promote healthy lifestyles and provide planned educational services using appropriate interpersonal communication skills and educational strategies,latest,,3,0,2,3,4,5
+103352,FolderName2;SubName2,Responsibility,Initiate and assume responsibility for health promotion and disease prevention activities for diverse populations,n_mastery,5,3,0,2,3,4,5
+103352,FolderName1;SubFolderName1,Health Lifestyle,Promote healthy lifestyles and provide planned educational services using appropriate interpersonal communication skills and educational strategies,latest,,3,0,2,3,4,5
+103352,FolderName3;SubName3;subsubname1,Ability,Responsibility for health promotion and disease prevention activities for diverse populations,n_mastery,5,3,0,2,3,4,5
